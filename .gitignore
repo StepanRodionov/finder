@@ -1,0 +1,23 @@
+vendor
+internal/pkg
+
+# App execution files
+./dist
+main.exe
+finder.exe
+
+# Local environment configuration
+.env.local
+.env.*.local
+
+# Docker configuraion override
+docker-compose.override.yml
+
+docker/go/id_rsa
+.idea
+
+.vscode/launch.json
+*.log
+test/data/monolith/
+
+__debug_bin

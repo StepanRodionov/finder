@@ -1,0 +1,40 @@
+version: "3.6"
+
+services:
+  go:
+    image: golang:1.19
+    volumes:
+      - "./:/go/src/finder"
+    networks:
+      - finder
+
+  elastic:
+    image: elasticsearch:8.5.0
+    environment:
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+      - xpack.security.enabled=false
+      - sniffOnConnectionFault=true
+      - discovery.type=single-node
+    networks:
+      - finder
+    volumes:
+      - "esdata:/usr/share/elasticsearch/data"
+      - "./synonyms.txt:/usr/share/elasticsearch/config/synonyms.txt"
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: kibana:8.5.0
+    depends_on:
+      - elastic
+    environment:
+      ELASTICSEARCH_HOSTS: '["api://elastic:9200"]'
+    networks:
+      - finder
+
+networks:
+  finder:
+    external: true
+
+volumes:
+  esdata:
